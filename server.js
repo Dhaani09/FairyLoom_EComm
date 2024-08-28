@@ -1,25 +1,27 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const multer = require('multer');
-const mysql = require('mysql');
+const { Pool } = require('pg');
 const path = require('path');
 const session = require('express-session');
 const app = express();
 const port = 3000;
 
 // Database connection
-const db = mysql.createConnection({
-    host: '127.0.0.1', // Force IPv4
-    user: 'root',
-    password: 'Kanchi1819', // MySQL password
-    database: 'fashion' // database name
+const db = new Pool({
+    connectionString: process.env.DATABASE_URL, // Using the environment variable for the database URL
+    ssl: {
+        rejectUnauthorized: false // This is necessary for some hosted PostgreSQL services like Render
+    }
 });
 
-db.connect((err) => {
+db.connect((err, client, release) => {
     if (err) {
-        throw err;
+        console.error('Error acquiring client', err.stack);
+    } else {
+        console.log('PostgreSQL connected...');
+        release();
     }
-    console.log('MySQL connected...');
 });
 
 // Middleware
