@@ -58,6 +58,26 @@ db.query(`
     }
 });
 
+db.query(`
+    CREATE TABLE cart (
+    id SERIAL PRIMARY KEY,  -- Auto-incrementing unique identifier for each cart item
+    email VARCHAR(255) NOT NULL,  -- User's email to associate the cart item with the user
+    product_id VARCHAR(255) NOT NULL,  -- Unique identifier for the product
+    product_name VARCHAR(255) NOT NULL,  -- Name of the product
+    product_quantity INTEGER NOT NULL CHECK (product_quantity > 0), 
+    price NUMERIC(10, 2) NOT NULL,  -- Price of the product
+    pic VARCHAR(255),  -- URL or path to the product image
+    size VARCHAR(50),  -- Size of the product (optional)
+    UNIQUE(email, product_id)  -- Ensures that each user can have only one entry per product in the cart
+    );
+`, (err, result) => {
+    if (err) {
+        console.error('Error creating cart table:', err);
+    } else {
+        console.log('Cart table ready.');
+    }
+});
+
 // Serve index.html for the root URL
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -182,18 +202,6 @@ app.get('/user-info', (req, res) => {
         res.status(401).json({ error: 'User not signed in' });
     }
 });
-
-CREATE TABLE cart (
-    id SERIAL PRIMARY KEY,  -- Auto-incrementing unique identifier for each cart item
-    email VARCHAR(255) NOT NULL,  -- User's email to associate the cart item with the user
-    product_id VARCHAR(255) NOT NULL,  -- Unique identifier for the product
-    product_name VARCHAR(255) NOT NULL,  -- Name of the product
-    product_quantity INTEGER NOT NULL CHECK (product_quantity > 0), 
-    price NUMERIC(10, 2) NOT NULL,  -- Price of the product
-    pic VARCHAR(255),  -- URL or path to the product image
-    size VARCHAR(50),  -- Size of the product (optional)
-    UNIQUE(email, product_id)  -- Ensures that each user can have only one entry per product in the cart
-);
 
 // Handle adding item to cart
 app.post('/add-to-cart', async (req, res) => {
