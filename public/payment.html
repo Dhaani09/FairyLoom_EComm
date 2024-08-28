@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FairyLoom/Payment</title>
+    <style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: url('images/payment.jpg') no-repeat center center fixed;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .container {
+        background: rgba(0, 0, 0, 0);
+        width: 450px;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        /* -webkit-text-fill-color: #070303; */
+        text-shadow: white 1px 0px 20px;
+        /* box-shadow: 0 0 10px rgba(249, 223, 223, 0.5); */
+        box-shadow: 0 12px 10px rgba(0, 0, 0, 0.3);
+        background-color: none;
+        /* background:linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0)); */
+        /* opacity: 0.9; */
+        animation: slideIn 1s forwards;
+    }
+
+    h1 {
+        font-size: 26px;
+        text-align: center;
+        margin-bottom: 20px;
+        color: #070101;
+    }
+
+    .user-info {
+        margin-bottom: 20px;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .grand-total {
+        background-color: #f8f8f8;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .section {
+        margin-bottom: 25px;
+    }
+
+    .section h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+        color: #090707;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="month"],
+    input[type="password"] {
+        width: calc(100% - 10px);
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+    .payment-methods {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 10px;
+        opacity: 0.5; /* Start with payment methods disabled */
+        pointer-events: none; /* Disable interactions */
+    }
+
+    .add {
+        display: flex;
+        flex-direction: row;
+        gap: 50px;
+        cursor: pointer;
+    }
+
+    .payment-option {
+        width: 70px;
+        height: 70px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+        border-radius: 5px;
+        border: 1px solid transparent;
+    }
+
+    .payment-option:hover {
+        transform: scale(1.1);
+        border: 1px solid #ccc;
+    }
+
+    .payment-option.selected {
+        border: 2px solid #4CAF50;
+    }
+
+    .place-order {
+        width: 100%;
+        padding: 15px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 18px;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .place-order:hover {
+        background-color: #45a049;
+    }
+
+    .delivery-date {
+        font-size: 20px;
+        color: #fcf6f6;
+        text-shadow: #000 1px 0 18px;
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    h3 {
+        margin-bottom: 10px;
+    }
+
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background-color: #fff;
+        padding: 20px;
+        border: 1px solid #888;
+        border-radius: 10px;
+        width: 300px;
+        text-align: center;
+        position: relative;
+        margin: auto;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    /* Image in COD Modal */
+    .cod-image {
+        width: 100px;
+        margin-bottom: 15px;
+    }
+
+    .cod-text {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Confirm Your Details</h1>
+        
+        <!-- User Information -->
+        <div class="user-info">
+            <p><strong>Username:</strong> <span id="username"></span></p>
+        </div>
+
+        <!-- Grand Total -->
+        <div class="grand-total">
+            <p>Total Amount: <strong>$<span id="total-amount">0.00</span></strong></p>
+        </div>
+
+        <form id="checkout-form" action="order.html" method="post">
+            <div class="section">
+                <h2>Shipping Information</h2>
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" required oninput="validateForm()">
+                
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" required oninput="validateForm()">
+                
+                <p class="delivery-date">Expected Delivery Date: <strong id="delivery-date"></strong></p>
+            </div>
+
+            <div class="section">
+                <h2>Payment Method</h2>
+                <div class="payment-methods" id="payment-methods">
+                    <div class="add grand-total" onclick="selectPaymentOption('Paytm', 'https://paytm.com')">
+                        <img src="images/paytm.jpg" alt="Paytm" class="payment-option">
+                        <p>Paytm</p>
+                    </div>
+                    <div class="add grand-total" onclick="selectPaymentOption('Google Pay', 'https://pay.google.com')">
+                        <img src="images/gpay.png" alt="Google Pay" class="payment-option">
+                        <p>Google Pay</p>
+                    </div>
+                    <div class="add grand-total" onclick="selectPaymentOption('PayPal', 'https://paypal.com')">
+                        <img src="images/ppal.png" alt="PayPal" class="payment-option">
+                        <p>PayPal</p>
+                    </div>
+                    <div class="add grand-total" onclick="showCardForm('Credit Card')">
+                        <img src="images/cc.png" alt="Credit Card" class="payment-option">
+                        <p>Credit Card</p>
+                    </div>
+                    <div class="add grand-total" onclick="showCardForm('Debit Card')">
+                        <img src="images/dc.jpg" alt="Debit Card" class="payment-option">
+                        <p>Debit Card</p>
+                    </div>
+                    <div class="add grand-total" onclick="showCodDialog()">
+                        <img src="images/cod.png" alt="Cash on Delivery" class="payment-option">
+                        <p>Cash On Delivery</p>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Card Details Modal -->
+    <div id="cardModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3 id="card-type-title"></h3>
+            <label for="card-number">Card Number:</label>
+            <input type="text" id="card-number" name="card-number" required>
+            
+            <label for="expiry-date">Expiry Date:</label>
+            <input type="month" id="expiry-date" name="expiry-date" required>
+            
+            <label for="cvv">CVV:</label>
+            <input type="text" id="cvv" name="cvv" required>
+            
+            <label for="pin">PIN:</label>
+            <input type="password" id="pin" name="pin" required>
+
+            <button type="button" class="place-order" onclick="validateCardForm()">Place Order</button>
+        </div>
+    </div>
+
+    <!-- COD Modal -->
+    <div id="codModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img src="images/cod.png" alt="Cash on Delivery" class="cod-image">
+            <div class="cod-text">You have selected Cash on Delivery. The total amount to be paid is <strong>$<span id="cod-amount">0.00</span></strong>.</div>
+            <button type="button" class="place-order" onclick="redirectToOrder()">Place Order</button>
+        </div>
+    </div>
+
+    <script>
+        let totalAmount = 0;
+
+        // Fetch user info and display it
+        fetch('/user-info')
+            .then(response => response.json())
+            .then(user => {
+                document.getElementById('username').textContent = `${user.firstName} ${user.surName}`;
+            })
+            .catch(error => console.error('Error fetching user info:', error));
+
+        // Calculate and display the delivery date
+        const deliveryDateElement = document.getElementById('delivery-date');
+        const currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() + 5);
+        deliveryDateElement.textContent = currentDate.toDateString();
+
+        // Enable payment options only if address and phone number are filled
+        function validateForm() {
+            const address = document.getElementById('address').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const paymentMethods = document.getElementById('payment-methods');
+
+            if (address !== '' && phone !== '') {
+                paymentMethods.style.pointerEvents = 'auto';
+                paymentMethods.style.opacity = '1';
+            } else {
+                paymentMethods.style.pointerEvents = 'none';
+                paymentMethods.style.opacity = '0.5';
+            }
+        }
+
+        // Show card details form for credit or debit card
+        function showCardForm(cardType) {
+            document.getElementById('card-type-title').textContent = cardType + ' Details';
+            document.getElementById('cardModal').style.display = 'flex';
+        }
+
+        // Show COD dialog and display the total amount
+        function showCodDialog() {
+            document.getElementById('cod-amount').textContent = totalAmount.toFixed(2);
+            document.getElementById('codModal').style.display = 'flex';
+        }
+
+        // Validate the card form and redirect to order.html
+        function validateCardForm() {
+            const cardNumber = document.getElementById('card-number').value.trim();
+            const expiryDate = document.getElementById('expiry-date').value.trim();
+            const cvv = document.getElementById('cvv').value.trim();
+            const pin = document.getElementById('pin').value.trim();
+
+            if (cardNumber !== '' && expiryDate !== '' && cvv !== '' && pin !== '') {
+                redirectToOrder();
+            } else {
+                alert('Please fill all the card details.');
+            }
+        }
+
+        // Handle non-card payment options
+        function selectPaymentOption(option, url) {
+            closeModal(); // Close any open modal
+            if (url) {
+                window.location.href = url; // Redirect for online payments
+            } else {
+                alert('You have selected ' + option);
+            }
+        }
+
+        // Close the modal
+        function closeModal() {
+            document.getElementById('cardModal').style.display = 'none';
+            document.getElementById('codModal').style.display = 'none';
+        }
+
+        // Redirect to order.html for all place order buttons
+        function redirectToOrder() {
+            window.location.href = 'order.html';
+        }
+
+        function fetchCartItems() {
+            fetch('/cart-items')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.items && data.items.length > 0) {
+                        let cartItemsHtml = '';
+                        let grandTotal = 0; // Variable to store the sum of all item totals
+                        const itemCount = data.items.length; // Number of items in the cart
+
+                        data.items.forEach(item => {
+                            const price = item.price;
+                            const totalPrice = price * item.product_quantity;
+
+                            // Add the total price of the current item to the grand total
+                            grandTotal += totalPrice;
+
+                            cartItemsHtml += `
+                                <div class="cart-item" data-id="${item.product_id}" style="display: flex; align-items: center; margin-bottom: 20px;">
+                                    <div style="flex-shrink: 0; margin-right: 20px;">
+                                        <img src="${item.pic}" alt="${item.product_name}" style="max-width: 150px; border-radius: 8px;">
+                                    </div>
+                                    <div>
+                                        <p style="font-size: 18px; font-weight: bold;">${item.product_name}</p>
+                                        <p style="font-size: 16px;">Size: ${item.size}</p>
+                                        <p style="font-size: 16px;">Quantity: ${item.product_quantity}</p>
+                                        <p style="font-size: 16px;">Price: $${price}</p>
+                                        <p style="font-size: 18px; font-weight: bold;">Total Price: $${totalPrice}</p>
+                                        <button class="remove-from-cart" data-id="${item.product_id}" style="padding: 10px 15px; background-color: #ff4d4d; color: white; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">
+                                            Remove from Cart
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                        });
+
+                        // Display the grand total amount in the "Proceed to Buy" button
+                        document.getElementById('total-amount').textContent = grandTotal.toFixed(2);
+                        totalAmount = grandTotal;
+
+                        // Add the grand total and "Proceed to Buy" button to the end of the cart items HTML
+                        cartItemsHtml += `
+                            <div style="text-align: right; margin-top: 20px;">
+                                <p style="font-size: 20px; font-weight: bold;">Grand Total: $${grandTotal.toFixed(2)}</p>
+                                <button id="proceed-to-buy" style="padding: 15px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; margin-top: 10px;">
+                                    Proceed to Buy (${itemCount} ${itemCount === 1 ? 'item' : 'items'})
+                                </button>
+                            </div>
+                        `;
+
+                        document.getElementById('cart-items').innerHTML = cartItemsHtml;
+
+                        // Add event listeners for remove buttons
+                        document.querySelectorAll('.remove-from-cart').forEach(button => {
+                            button.addEventListener('click', function () {
+                                const productId = this.getAttribute('data-id');
+                                removeFromCart(productId);
+                            });
+                        });
+
+                        // Add event listener for "Proceed to Buy" button
+                        document.getElementById('proceed-to-buy').addEventListener('click', function () {
+                            selectedProductTotal = grandTotal;
+                            document.getElementById('total-amount').textContent = selectedProductTotal.toFixed(2);
+                            redirectToPayment();
+                        });
+
+                    } else {
+                        document.getElementById('cart-items').innerHTML = '<p>Your cart is empty.</p>';
+                    }
+                })
+                .catch(error => console.error('Error fetching cart items:', error));
+        }
+
+        // Function to handle redirection to payment options
+        function redirectToPayment(productId = null) {
+            if (productId) {
+                // Redirect to payment page for a specific product
+                window.location.href = `payment.html?product_id=${productId}&total=${selectedProductTotal.toFixed(2)}`;
+            } else {
+                // Redirect to payment page for all items in the cart
+                window.location.href = `payment.html?total=${selectedProductTotal.toFixed(2)}`;
+            }
+        }
+
+        // Fetch cart items on page load
+        fetchCartItems();
+
+    </script>
+</body>
+</html>

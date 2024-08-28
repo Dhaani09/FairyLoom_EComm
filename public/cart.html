@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FairyLoom</title>
+    <style>
+        .oval-image {
+            border-radius: 50%; /* Apply 50% border-radius to create an oval shape */
+            overflow: hidden; /* Hide any content outside the oval shape */
+        }
+    </style>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/fontawesome.min.css"
+integrity="sha512-SgaqKKxJDQ/tAUAAXzvxZz33rmn7leYDYfBP+YoMRSENhf3zJyx3SBASt/OfeQwBHA1nxMis7mM3EV/oYT6Fdw=="
+crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <section id="header" style="padding-top:0px;">
+        <div class="logo">
+            <span class="highlight">F</span>airy<span class="highlight">L</span>oom
+        </div>        
+        <div>
+            <ul id="navbar">
+                <li><a href="index.html">Home</a></li> 
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="#product1">About</a></li>
+                <li><a href="#con">Contact Us</a></li>
+                <li><a href="cart.html" id="lg-bag"><i class="fa-solid fa-cart-shopping"></i></a></li>
+                <a href="#" id="close"><i class="fa-regular fa-circle-xmark"></i></a>
+                <div id="mobile">
+                    <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
+                </div>
+                
+                <div class="profile">
+                    <img id="profile-pic" src="images/signin.webp" alt="Profile" class="circle">
+                    <div id="user-info-container" class="dropdown-content">
+                        <div id="user-info">
+                            <!-- User info will be dynamically inserted here -->
+                        </div>
+                        <!-- Sign Out button -->
+                        <button id="sign-out" style="display: none;">Sign Out</button>
+                    </div>
+                </div>
+            </ul>
+        </div>
+    </section>
+    <section id="page-header8">
+        <!-- <h2>Load Your Cart</h2>
+        <p>Save more with coupons & get special discounts!</p> -->
+    </section>
+    <section id="page-header7">
+        <!-- <h2>Load Your Cart</h2>
+        <p>Save more with coupons & get special discounts!</p> -->
+    </section>
+    <section id="prodetails" class="section-p1">
+    <div id="cart-items"></div>
+    </section>
+    <section id="product1" class="section-p1">
+        <h2>FOR YOU</h2>
+        <p>You May Also Like</p>
+        <div class="pro-container">
+            <div class="pro" data-id="1c" data-name="White Striped Stylish Grey Beanie With Pompom" data-price="62" data-pic="images/winter_9.jpg">
+                <img src="images/winter_9.jpg" alt="" height="290" width="30">
+                <div class="des">
+                    <span>PetitePearls</span>
+                    <h5>White Striped Stylish Grey Beanie With Pompom</h5>
+                    <div class="star">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>$62</h4>
+                </div>
+                <label for="size-1">Size:</label>
+                    <select id="size-1" class="size">
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                    </select>
+                <label for="quantity-1"><br><br>Quantity:</label>
+                <input type="number" id="quantity-1" class="quantity" value="1" min="1">
+                <p>&nbsp;</p>
+                <br><a href="#" class="add-to-cart" id="addtocart"><i class="fa-solid fa-cart-shopping"></i></a>
+            </div>
+            <div class="pro" data-id="2c" data-name="LED Light-Up Sneakers" data-price="68" data-pic="images/foot7.jpg">
+                <img src="images/foot7.jpg" alt="" height="290" width="30">
+                <div class="des">
+                    <span>Aspeaches</span>
+                    <h5>LED Light-Up Sneakers</h5>
+                    <div class="star">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>$68</h4>
+                </div>
+                <label for="size-1">Size:</label>
+                    <select id="size-1" class="size">
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                    </select>
+                <label for="quantity-1"><br><br>Quantity:</label>
+                <input type="number" id="quantity-1" class="quantity" value="1" min="1">
+                <p>&nbsp;</p>
+                <a href="#" class="add-to-cart" id="addtocart"><i class="fa-solid fa-cart-shopping cart"></i></a>
+            </div>
+            <div class="pro" data-id="3c" data-name="Pastel Color Dangri" data-price="80" data-pic="images/buy_get12.jpg">
+                <img src="images/buy_get12.jpg" alt="" height="290" width="30">
+                <div class="des">
+                    <span>Dressberry</span>
+                    <h5>Pastel Color Dangri</h5>
+                    <div class="star">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>$80</h4>
+                </div>
+                <label for="size-1">Size:</label>
+                    <select id="size-1" class="size">
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                    </select>
+                <label for="quantity-1"><br><br>Quantity:</label>
+                <input type="number" id="quantity-1" class="quantity" value="1" min="1">
+                <p>&nbsp;</p>
+                <a href="#" class="add-to-cart" id="addtocart"><i class="fa-solid fa-cart-shopping cart"></i></a>
+            </div>
+        </section>
+    <section id="newsletter" class="section-p1 section-m1">
+        <div class="newstext">
+            <h4>Sign Up For Newsletter</h4>
+            <p>Get E-mail updates about our latest shop and <span>special offers.</span></p>
+        </div>
+        <div class="form">
+            <input type="text" placeholder="Your E-mail address">
+            <button class="normal">Sign Up</button>
+        </div>
+    </section>
+    <footer class="section-p1" id="con">
+        <div class="col">
+            <div class="logo">
+                <span style="text-shadow: black 1px 3px 0px;" class="highlight">FL</span>
+            </div>
+            <br>
+            <h4>Contact</h4>
+            <p><strong>Address:</strong> DLF Mall Of India, Sector-18, Noida, Uttar Pradesh-201301</p>
+            <p><strong>Phone:</strong> +91 9821712042</p>
+            <p><strong>Hours:</strong> 10:00 - 22:00, Mon - Sat</p>
+            <div class="follow">
+                <h4>Follow us</h4>
+                <div class="icon">
+                    <i class="fab fa-facebook-f"></i>
+                    <i class="fab fa-twitter"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-pinterest-p"></i>
+                    <i class="fab fa-youtube"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <h4> About</h4>
+            <a href="#">About us</a>
+            <a href="#">Delivery Information</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms & Conditions</a>
+            <a href="#">Contact Us</a>
+        </div>
+        <div class="col">
+            <h4> My Account</h4>
+            <a href="#">Sign In</a>
+            <a href="#">View Cart</a>
+            <a href="#">My Wishlist</a>
+            <a href="#">Track My Order</a>
+            <a href="#">Help</a>
+        </div>
+        <div class="col install">
+            <h4>Install App</h4>
+            <p>From App Store or Google Play</p>
+            <div class="row">
+                <a href="https://www.apple.com/app-store/" target="_blank">
+                    <img src="images/as.jpg" height="60" width="90" alt="App Store">
+                </a>
+                <a href="https://play.google.com/store" target="_blank">
+                    <img src="images/gp.png" height="60" width="90" alt="Google Play Store">
+                </a>
+            </div>
+            <p>Secured Payment Gateways</p>
+            <img src="images/spg.png" height="110" width="150" alt="">
+        </div>
+        <div class="copyright">
+            <p>© 2024, Dhaani Jain - Ecommerce</p>
+        </div>
+    </footer>
+    <script src="app.js"></script>
+</body>
+</html>

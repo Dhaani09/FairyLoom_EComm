@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FairyLoom</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .container video {
+            max-width: 100%;
+            height: 50vh;
+            display: block;
+            margin: 20px auto;
+        }
+
+        .container p {
+            margin-top: 20px;
+            font-size: 36px;
+            color: #030303;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            text-decoration: solid;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <video autoplay muted loop>
+            <source src="images/vid2.mp4" type="video/mp4">
+        </video>
+        <p>Order Successfully Placed! 🎉❤️✨</p>
+    </div>
+    <script>
+        // JavaScript to redirect to index.html after 5 seconds
+        setTimeout(function() {
+            window.location.href = "index.html";
+        }, 3800); // 5000 milliseconds = 5 seconds
+    </script>
+</body>
+</html>

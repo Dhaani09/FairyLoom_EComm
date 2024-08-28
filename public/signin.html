@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FairyLoom/SignIn</title>
+    <link rel="stylesheet" href="signin.css">
+</head>
+<body>
+    <div class="signin-container">
+        <form class="signin-form" id="signinForm" action="/signin" method="post">
+            <h2>Sign In</h2>
+            <div class="form-group">
+                <label for="email"><strong>Email</strong></label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password"><strong>Password</strong></label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" required>
+                    <button type="button" class="toggle-password" onclick="togglePassword('password')">👁️</button>
+                </div>
+            </div>
+            <div id="error-message" class="error"></div>
+            <br><div><input  type="reset" value="Reset Now"><br><br></div>
+            <button type="submit" class="signin-button">SIGN IN</button>
+            <div>
+                <a href="signup.html" class="link-button">Not a registered user? Sign Up</a>
+            </div>
+        </form>
+    </div>
+    <script>
+    function togglePassword(fieldId) {
+        const field = document.getElementById(fieldId);
+        field.type = field.type === 'password' ? 'text' : 'password';
+    }
+
+    document.getElementById('signinForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the form from submitting immediately
+
+        const form = event.target;
+        const formData = new FormData(form);
+        const errorMessage = document.getElementById('error-message');
+
+        // Clear previous error messages
+        errorMessage.textContent = '';
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                errorMessage.textContent = data.error;
+            } else if (data.success) {
+                window.location.href = 'index.html'; // Redirect to index page
+            }
+        })
+        .catch(error => {
+            errorMessage.textContent = 'An unexpected error occurred.';
+            console.error('Error:', error);
+        });
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FairyLoom/SignUp</title>
+    <link rel="stylesheet" href="signin.css">
+</head>
+<body>
+    <div class="signin-container">
+        <form class="signin-form" id="signupForm" action="/signup" method="post">
+            <h2>Sign Up</h2>
+            <div class="form-group">
+                <label for="firstName"><strong>First Name</strong></label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div class="form-group">
+                <label for="surName"><strong>Surname</strong></label>
+                <input type="text" id="surName" name="surName" required>
+            </div>
+            <div class="form-group">
+                <label for="email"><strong>Email</strong></label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password"><strong>Password</strong></label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" required>
+                    <button type="button" class="toggle-password" onclick="togglePassword('password')">👁️</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword"><strong>Confirm Password</strong></label>
+                <div class="password-wrapper">
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">👁️</button>
+                </div>
+            </div>
+            <div>
+                <input  type="reset" value="Reset Now"><br><br>
+            </div>
+            <div id="error-message" class="error"></div>
+            <button type="submit" class="signin-button">SIGN UP</button>
+            <div>
+                <a href="signin.html" class="link-button">Already a user? Sign In</a>
+            </div>
+        </form>
+    </div>
+    <script>
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            field.type = field.type === 'password' ? 'text' : 'password';
+        }
+    
+        document.getElementById('signupForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting immediately
+    
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorMessage = document.getElementById('error-message');
+    
+            // Clear previous error messages
+            errorMessage.textContent = '';
+    
+            if (password !== confirmPassword) {
+                errorMessage.textContent = 'Passwords do not match.';
+                return; // Stop execution if passwords do not match
+            }
+    
+            const formData = new URLSearchParams(new FormData(event.target)).toString();
+    
+            fetch(event.target.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    errorMessage.textContent = data.error;
+                } else if (data.success) {
+                    window.location.href = 'index.html'; // Redirect to index page
+                }
+            })
+            .catch(error => {
+                errorMessage.textContent = 'An unexpected error occurred.';
+                console.error('Error:', error);
+            });
+        });
+    </script>
+    
+</body>
+</html>
