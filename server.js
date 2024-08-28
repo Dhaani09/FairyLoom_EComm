@@ -127,28 +127,35 @@ app.post('/signup', async (req, res) => {
 });
 
 // Handle signin form submission
-app.post('/signin', (req, res) => {
+app.post('/signin', async (req, res) => {
     const { email, password } = req.body;
 
-    db.query('SELECT * FROM users WHERE email = ? AND password = ?', [email, password], (err, results) => {
-        if (err) {
-            console.error('Error checking credentials:', err);
-            return res.status(500).json({ error: 'Error checking credentials.' });
-        }
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required.' });
+    }
 
-        if (results.length > 0) {
+    try {
+        // Query to check credentials
+        const query = 'SELECT * FROM users WHERE email = $1 AND password = $2';
+        const result = await db.query(query, [email, password]);
+
+        if (result.rows.length > 0) {
             // Store user information in session
             req.session.user = {
-                id: results[0].id,
-                firstName: results[0].firstName,
-                surName: results[0].surName,
-                email: results[0].email
+                id: result.rows[0].id,
+                firstName: result.rows[0].firstname,
+                surName: result.rows[0].surname,
+                email: result.rows[0].email
             };
             res.status(200).json({ success: true });
         } else {
             res.status(400).json({ error: 'Invalid email or password.' });
         }
-    });
+    } catch (err) {
+        console.error('Error checking credentials:', err.message);
+        console.error('Stack trace:', err.stack);
+        res.status(500).json({ error: 'Error checking credentials.' });
+    }
 });
 
 // Handle sign out
@@ -163,6 +170,7 @@ app.post('/signout', (req, res) => {
 });
 
 // Route to get user information
+// Get user information
 app.get('/user-info', (req, res) => {
     if (req.session && req.session.user) {
         res.json({
@@ -176,56 +184,55 @@ app.get('/user-info', (req, res) => {
 });
 
 // Handle adding item to cart
-app.post('/add-to-cart', (req, res) => {
+app.post('/add-to-cart', async (req, res) => {
     if (req.session && req.session.user) {
-        const { productId, productName, productQuantity, price, pic, productSize} = req.body;
+        const { productId, productName, productQuantity, price, pic, productSize } = req.body;
         if (productQuantity === undefined || productQuantity <= 0) {
             return res.status(400).json({ error: 'Invalid quantity provided.' });
         }
 
         const userEmail = req.session.user.email;
 
-        // Database query to insert into cart
+        // Query to insert into cart with PostgreSQL syntax
         const query = `
             INSERT INTO cart (email, product_id, product_name, product_quantity, price, pic, size)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-            ON DUPLICATE KEY UPDATE product_quantity = product_quantity + VALUES(product_quantity);
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            ON CONFLICT (email, product_id)
+            DO UPDATE SET product_quantity = cart.product_quantity + EXCLUDED.product_quantity;
         `;
 
-        // Assuming you are using a MySQL or SQLite database connection
-        db.query(query, [userEmail, productId, productName, productQuantity, price, pic, productSize], function (err) {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ error: 'Failed to add to cart' });
-            }
+        try {
+            await db.query(query, [userEmail, productId, productName, productQuantity, price, pic, productSize]);
             res.status(200).json({ message: 'Product added to cart successfully' });
-        });
+        } catch (err) {
+            console.error('Failed to add to cart:', err);
+            res.status(500).json({ error: 'Failed to add to cart' });
+        }
     } else {
         res.status(401).json({ error: 'User not signed in' });
     }
 });
 
-
 // Handle fetching cart items
-app.get('/cart-items', (req, res) => {
+app.get('/cart-items', async (req, res) => {
     if (!req.session.user) {
         return res.status(401).json({ error: 'User not signed in' });
     }
 
     const userEmail = req.session.user.email; // Fetch the user's email from the session
-    const query = 'SELECT * FROM cart WHERE email = ?'; // Query to select cart items based on email
-    db.query(query, [userEmail], (err, results) => {
-        if (err) {
-            console.error('Error fetching cart items:', err);
-            return res.status(500).json({ error: 'Error fetching cart items.' });
-        }
-        res.status(200).json({ items: results });
-    });
+    const query = 'SELECT * FROM cart WHERE email = $1'; // Query to select cart items based on email
+
+    try {
+        const { rows } = await db.query(query, [userEmail]);
+        res.status(200).json({ items: rows });
+    } catch (err) {
+        console.error('Error fetching cart items:', err);
+        res.status(500).json({ error: 'Error fetching cart items.' });
+    }
 });
 
-// Handle clearing cart on sign out
-// Endpoint to handle removal of cart items
-app.post('/update-cart', (req, res) => {
+// Handle updating cart
+app.post('/update-cart', async (req, res) => {
     if (!req.session.user) {
         return res.status(401).json({ error: 'User not signed in' });
     }
@@ -233,55 +240,45 @@ app.post('/update-cart', (req, res) => {
     const { productId } = req.body;
     const userEmail = req.session.user.email;
 
-    // SQL query to decrease quantity or delete item if quantity becomes zero
+    // Query to check the quantity of the item in the cart
     const checkQuantityQuery = `
         SELECT product_quantity FROM cart
-        WHERE email = ? AND product_id = ?
+        WHERE email = $1 AND product_id = $2
     `;
 
-    db.query(checkQuantityQuery, [userEmail, productId], (err, results) => {
-        if (err) {
-            console.error('Error fetching cart item quantity:', err);
-            return res.status(500).json({ error: 'Failed to update cart' });
-        }
+    try {
+        const { rows } = await db.query(checkQuantityQuery, [userEmail, productId]);
 
-        if (results.length > 0) {
-            const currentQuantity = results[0].product_quantity;
-            
+        if (rows.length > 0) {
+            const currentQuantity = rows[0].product_quantity;
+
             if (currentQuantity > 1) {
                 // Update the quantity
                 const updateQuantityQuery = `
                     UPDATE cart
                     SET product_quantity = product_quantity - 1
-                    WHERE email = ? AND product_id = ?
+                    WHERE email = $1 AND product_id = $2
                 `;
 
-                db.query(updateQuantityQuery, [userEmail, productId], (err) => {
-                    if (err) {
-                        console.error('Error updating cart quantity:', err);
-                        return res.status(500).json({ error: 'Failed to update cart' });
-                    }
-                    res.status(200).json({ success: true });
-                });
+                await db.query(updateQuantityQuery, [userEmail, productId]);
+                res.status(200).json({ success: true });
             } else {
                 // Remove the item if quantity is 1
                 const deleteItemQuery = `
                     DELETE FROM cart
-                    WHERE email = ? AND product_id = ?
+                    WHERE email = $1 AND product_id = $2
                 `;
 
-                db.query(deleteItemQuery, [userEmail, productId], (err) => {
-                    if (err) {
-                        console.error('Error removing item from cart:', err);
-                        return res.status(500).json({ error: 'Failed to remove item from cart' });
-                    }
-                    res.status(200).json({ success: true });
-                });
+                await db.query(deleteItemQuery, [userEmail, productId]);
+                res.status(200).json({ success: true });
             }
         } else {
             res.status(404).json({ error: 'Item not found in cart' });
         }
-    });
+    } catch (err) {
+        console.error('Failed to update cart:', err);
+        res.status(500).json({ error: 'Failed to update cart' });
+    }
 });
 
 // Start the server
