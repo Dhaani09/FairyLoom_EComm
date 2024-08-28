@@ -14,7 +14,7 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "multer": "^1.4.5-lts.1",
-    "pg": "^8.11.0"  // Add this line for PostgreSQL
+    "pg": "^8.11.0"  
   },
   "description": ""
 }
