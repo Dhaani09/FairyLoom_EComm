@@ -95,7 +95,7 @@ app.post('/signup', async (req, res) => {
 
     try {
         // Check if the email is already registered
-        const checkEmailQuery = 'SELECT * FROM users WHERE email = ?';
+        const checkEmailQuery = 'SELECT * FROM users WHERE email = $1';
         const checkEmailResult = await db.query(checkEmailQuery, [email]);
 
         if (checkEmailResult.rows.length > 0) {
@@ -105,7 +105,7 @@ app.post('/signup', async (req, res) => {
         // Insert new user
         const insertUserQuery = `
             INSERT INTO users (firstName, surName, email, password)
-            VALUES (?, ?, ?, ?)
+            VALUES ($1, $2, $3, $4)
             RETURNING id
         `;
         const insertUserResult = await db.query(insertUserQuery, [firstName, surName, email, password]);
@@ -120,7 +120,8 @@ app.post('/signup', async (req, res) => {
 
         res.status(200).json({ success: true });
     } catch (err) {
-        console.error('Error during signup:', err);
+        console.error('Error during signup:', err.message); // Log only the message
+        console.error('Stack trace:', err.stack); // Log the stack trace
         res.status(500).json({ error: 'Error during signup.' });
     }
 });
