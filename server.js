@@ -42,6 +42,21 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: false } // Set to true if using HTTPS
 }));
+db.query(`
+    CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        firstName VARCHAR(255) NOT NULL,
+        surName VARCHAR(255) NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL
+    );
+`, (err, result) => {
+    if (err) {
+        console.error('Error creating users table:', err);
+    } else {
+        console.log('Users table ready.');
+    }
+});
 
 // Serve index.html for the root URL
 app.get('/', (req, res) => {
