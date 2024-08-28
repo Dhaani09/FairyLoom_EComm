@@ -87,42 +87,42 @@ pages.forEach(page => {
 });
 
 // Handle signup form submission
-app.post('/signup', (req, res) => {
+app.post('/signup', async (req, res) => {
     const { firstName, surName, email, password } = req.body;
     if (!firstName || !surName || !email || !password) {
         return res.status(400).json({ error: 'All fields are required.' });
     }
 
-    // Check if the email is already registered
-    db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
-        if (err) {
-            console.error('Error checking for existing email:', err);
-            return res.status(500).json({ error: 'Error checking for existing email.' });
-        }
+    try {
+        // Check if the email is already registered
+        const checkEmailQuery = 'SELECT * FROM users WHERE email = ?';
+        const checkEmailResult = await db.query(checkEmailQuery, [email]);
 
-        if (results.length > 0) {
+        if (checkEmailResult.rows.length > 0) {
             return res.status(400).json({ error: 'Email is already registered.' });
         }
 
         // Insert new user
-        const query = 'INSERT INTO users (firstName, surName, email, password) VALUES (?, ?, ?, ?)';
-        db.query(query, [firstName, surName, email, password], (err, result) => {
-            if (err) {
-                console.error('Error saving user to database:', err);
-                return res.status(500).json({ error: 'Error saving user to database.' });
-            }
+        const insertUserQuery = `
+            INSERT INTO users (firstName, surName, email, password)
+            VALUES (?, ?, ?, ?)
+            RETURNING id
+        `;
+        const insertUserResult = await db.query(insertUserQuery, [firstName, surName, email, password]);
 
-            // Automatically sign in the user after signup
-            req.session.user = {
-                id: result.insertId,
-                firstName,
-                surName,
-                email
-            };
+        // Automatically sign in the user after signup
+        req.session.user = {
+            id: insertUserResult.rows[0].id,
+            firstName,
+            surName,
+            email
+        };
 
-            res.status(200).json({ success: true });
-        });
-    });
+        res.status(200).json({ success: true });
+    } catch (err) {
+        console.error('Error during signup:', err);
+        res.status(500).json({ error: 'Error during signup.' });
+    }
 });
 
 // Handle signin form submission
