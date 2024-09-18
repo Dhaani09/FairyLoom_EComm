@@ -83,7 +83,7 @@ Users can sign up or sign in for a personalized shopping experience. Hovering ov
 
 ### Before Sign In :
 ![Signed-In Profile Picture](https://github.com/user-attachments/assets/a4c203a9-f412-45aa-a200-c19095c37a22)
-### Before Sign In :
+### After Sign In :
 ![image](https://github.com/user-attachments/assets/33f20343-94ea-4e7d-81e9-fe3d59083b83)
 
 ---
