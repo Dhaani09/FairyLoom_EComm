@@ -39,6 +39,10 @@ The **Home Page** serves as the landing page for users, setting the tone for the
 
 Below this, there are sections dedicated to highlighting featured courses, easy deals, and special offers.
 
+![image](https://github.com/user-attachments/assets/201cf38f-3cfb-4098-9d11-3fd6a6129afe)
+
+![image](https://github.com/user-attachments/assets/d76d6cb8-9e64-4b9c-8510-b95e9ff8223c)  ![image](https://github.com/user-attachments/assets/ae9c27ef-e1f9-4253-bf57-e91309a86a52)
+
 ![Home Page Layout](https://github.com/user-attachments/assets/04f3e047-2daa-4537-9afb-de6c8f683417)
 
 ![Product Highlight Section](https://github.com/user-attachments/assets/b7342845-d3c1-4916-8cee-84a663fe9edd)
