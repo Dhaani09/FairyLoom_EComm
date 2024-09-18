@@ -1,5 +1,4 @@
 
-
 # FairyLoom E-Commerce Website
 
 **FairyLoom** is an e-commerce website dedicated to providing a seamless shopping experience for users. The website encompasses various features, including product browsing, cart management, and a payment system. This document outlines the structure, functionality, and technical details of the website, focusing on the payment and order confirmation components.
@@ -19,8 +18,9 @@
   - [Ethnic Page](#ethnic-page)
   - [Footwear Page](#footwear-page)
   - [Accessories Page](#accessories-page)
-- [Cart Page](#cart-page)
+- [Cart Page](#cart-page-with-products)
 - [Payment and Order Confirmation](#payment-and-order-confirmation)
+  - [Payment Method Dialog Boxes](#payment-method-dialog-boxes)
 
 ---
 
@@ -49,6 +49,7 @@ The product pages provide detailed information about each product, including ima
 ---
 
 ## Cart Page
+
 The **Cart Page** displays items added to the cart by the user. It shows the product information and allows users to adjust quantities or remove items before proceeding to checkout.
 
 ![Cart Page](https://github.com/user-attachments/assets/8e35155c-d1f4-4d41-9ec0-fe941b411a7a)
@@ -72,8 +73,14 @@ After the payment is successful, the **Order Confirmation Page** displays a mess
 ## User Sign Up and Sign In
 Users can sign up or sign in for a personalized shopping experience. Hovering over the profile button shows options for sign-up or sign-in. Once signed in, the user's profile picture is displayed, and their details are fetched from the database.
 
-![Sign Up](https://github.com/user-attachments/assets/e6453195-3517-4eee-8c3f-613d984340e9)
-![Sign In](https://github.com/user-attachments/assets/f664813e-9a4b-4421-bbec-18c23e4fafa5)
+### Sign Up / Sign In Forms:
+![Sign Up Form](https://github.com/user-attachments/assets/e6453195-3517-4eee-8c3f-613d984340e9)
+![Sign In Form](https://github.com/user-attachments/assets/f664813e-9a4b-4421-bbec-18c23e4fafa5)
+
+### Before Sign In :
+![Signed-In Profile Picture](https://github.com/user-attachments/assets/a4c203a9-f412-45aa-a200-c19095c37a22)
+### Before Sign In :
+![image](https://github.com/user-attachments/assets/33f20343-94ea-4e7d-81e9-fe3d59083b83)
 
 ---
 
@@ -106,17 +113,30 @@ This page focuses on jewelry, bags, and other fashion accessories, attracting a 
 
 ---
 
-## Cart Page
-The **Cart Page** showcases the items users have added, displaying product details, quantity options, and a button to proceed to checkout.
+## Cart Page with Products
+This page displays all the items added to the cart by the user, along with detailed information such as size, quantity, and pricing.
 
-![Cart Page](https://github.com/user-attachments/assets/8e35155c-d1f4-4d41-9ec0-fe941b411a7a)
+![Cart Page with Products](https://github.com/user-attachments/assets/da406335-47fa-45cb-9e50-5c6b05553284)
 
 ---
 
 ## Payment and Order Confirmation
+
 On the **Payment Page**, users can choose their preferred payment method, such as credit card or cash on delivery.
 
 ![Payment Page](https://github.com/user-attachments/assets/c87f44d1-5ab0-4cba-8125-fe6a96681328)
+
+### Payment Method Dialog Boxes
+When users select a payment method (Credit Card, Debit Card, or Cash on Delivery), the following dialog boxes appear:
+
+#### Credit Card :
+![Credit/Debit Card Payment Dialog](https://github.com/user-attachments/assets/6cd52b6d-9cb2-4998-af0b-4c1fb8eaf181)
+
+#### Debit Card Dialog Box :
+![image](https://github.com/user-attachments/assets/5aafd15b-05e8-4916-bbdd-cad9bc162897)
+
+#### Cash on Delivery (COD) Dialog Box:
+![Cash on Delivery Dialog](https://github.com/user-attachments/assets/340a392e-2778-43ed-8f91-91054e29a49a)
 
 Once the order is placed, users are redirected to the **Order Confirmation Page**, where they see a confirmation message.
 
