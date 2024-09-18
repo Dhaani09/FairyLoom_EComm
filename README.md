@@ -133,7 +133,7 @@ On the **Payment Page**, users can choose their preferred payment method, such a
 ### Payment Method Dialog Boxes
 When users select a payment method (Credit Card, Debit Card, or Cash on Delivery), the following dialog boxes appear:
 
-#### Credit Card :
+#### Credit Card Dialog Box :
 ![Credit/Debit Card Payment Dialog](https://github.com/user-attachments/assets/6cd52b6d-9cb2-4998-af0b-4c1fb8eaf181)
 
 #### Debit Card Dialog Box :
